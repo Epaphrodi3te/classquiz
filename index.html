@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassQuiz - Générez des Quiz avec l'IA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --danger: #f5576c;
+            --success: #48bb78;
+            --dark: #1a1a2e;
+            --light: #f8f9ff;
+            --text: #2d3748;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Boogaloo', cursive;
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn-download-nav {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-download-nav:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            margin-top: 80px;
+            padding: 60px 2rem 80px;
+            background: linear-gradient(135deg, var(--light) 0%, #fff 100%);
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-family: 'Boogaloo', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 14px 38px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .hero-image {
+            margin-top: 50px;
+            animation: floatIn 0.8s ease 0.6s both;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features {
+            padding: 80px 2rem;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Boogaloo', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--light) 0%, #f0f0ff 100%);
+            padding: 40px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        /* ===== PRICING SECTION ===== */
+        .pricing {
+            padding: 80px 2rem;
+            background: linear-gradient(135deg, var(--light) 0%, #fff 100%);
+        }
+
+        .pricing-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 2px solid #eee;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.2);
+            transform: scale(1.05);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 20px 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: #999;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            color: #666;
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-features li:before {
+            content: "✓ ";
+            color: var(--success);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            padding: 80px 2rem;
+            background: white;
+        }
+
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background: linear-gradient(135deg, var(--light) 0%, #f0f0ff 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .stars {
+            color: #ffc107;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .testimonial-text {
+            color: #666;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact {
+            padding: 80px 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact h2 {
+            font-family: 'Boogaloo', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .contact-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .contact-item i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .contact-item p {
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        .contact-item a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            color: #aaa;
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: scaleIn 0.3s ease;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        .modal h2 {
+            font-family: 'Boogaloo', cursive;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links span:not(:last-child) {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== NAVBAR ===== -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i> ClassQuiz
+            </div>
+            <ul class="nav-links">
+                <li><a onclick="scrollToSection('features')">Fonctionnalités</a></li>
+                <li><a onclick="scrollToSection('pricing')">Tarifs</a></li>
+                <li><a onclick="scrollToSection('testimonials')">Avis</a></li>
+                <li><a onclick="scrollToSection('contact')">Contact</a></li>
+                <li><button class="btn-download-nav" onclick="openDownloadModal()">
+                    <i class="fas fa-download"></i> Télécharger
+                </button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Créez des Quiz Intelligents avec l'IA</h1>
+            <p>ClassQuiz utilise l'intelligence artificielle pour générer automatiquement des quiz pertinents. Testez vos connaissances, suivez vos progrès et améliorez-vous chaque jour ! 🚀</p>
+            <div class="cta-buttons">
+                <button class="btn-primary" onclick="openDownloadModal()">
+                    <i class="fas fa-download"></i> Télécharger l'App
+                </button>
+                <button class="btn-secondary" onclick="document.getElementById('classquiz-app').click()">
+                    <i class="fas fa-play-circle"></i> Essayer maintenant
+                </button>
+            </div>
+            <div class="hero-image">
+                <svg width="100%" height="400" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="50" y="30" width="300" height="350" rx="20" fill="url(#grad1)" opacity="0.2"/>
+                    <rect x="50" y="30" width="300" height="350" rx="20" fill="none" stroke="url(#grad1)" stroke-width="2"/>
+                    <circle cx="200" cy="80" r="30" fill="url(#grad1)"/>
+                    <text x="200" y="90" text-anchor="middle" fill="white" font-size="14" font-weight="bold">📱</text>
+                    <text x="200" y="150" text-anchor="middle" fill="#667eea" font-size="16" font-weight="bold">Quiz AI</text>
+                    <rect x="70" y="170" width="260" height="40" rx="10" fill="url(#grad1)" opacity="0.3"/>
+                    <rect x="70" y="220" width="120" height="30" rx="8" fill="url(#grad1)" opacity="0.5"/>
+                    <rect x="200" y="220" width="130" height="30" rx="8" fill="url(#grad1)" opacity="0.3"/>
+                    <rect x="70" y="260" width="260" height="80" rx="10" fill="url(#grad1)" opacity="0.1"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FEATURES SECTION ===== -->
+    <section id="features" class="features">
+        <h2 class="section-title">Fonctionnalités Puissantes</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                <h3>Génération IA</h3>
+                <p>Générez des quiz pertinents en quelques secondes grâce à l'IA avancée. Des questions variées et adaptées à votre niveau.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Suivi des Progrès</h3>
+                <p>Analysez vos performances, consultez l'historique de vos quiz et suivez votre évolution en temps réel.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-share-alt"></i></div>
+                <h3>Partage Facile</h3>
+                <p>Partagez vos quiz avec vos amis, camarades de classe ou collègues via un simple lien.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-download"></i></div>
+                <h3>Export CSV</h3>
+                <p>Téléchargez vos résultats en CSV pour les analyser dans Excel ou tout autre outil.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-moon"></i></div>
+                <h3>Mode Sombre</h3>
+                <p>Protégez vos yeux avec le mode sombre confortable, idéal pour travailler le soir.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-smartphone"></i></div>
+                <h3>Responsive</h3>
+                <p>Utilisez ClassQuiz sur votre téléphone, tablette ou ordinateur. Parfait partout, tout le temps !</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PRICING SECTION ===== -->
+    <section id="pricing" class="pricing">
+        <h2 class="section-title">Plans Tarifaires</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Gratuit</h3>
+                <div class="price">0 <span>XOF</span></div>
+                <ul class="pricing-features">
+                    <li>10 quiz/mois</li>
+                    <li>Statistiques basiques</li>
+                    <li>Mode clair</li>
+                    <li>Support communautaire</li>
+                </ul>
+                <button class="btn-primary" onclick="openDownloadModal()" style="width: 100%; margin-top: 20px;">
+                    Commencer
+                </button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Premium</h3>
+                <div class="price">2,999 <span>XOF/mois</span></div>
+                <ul class="pricing-features">
+                    <li>Quiz illimités</li>
+                    <li>Analytics avancées</li>
+                    <li>Mode sombre</li>
+                    <li>Export CSV</li>
+                    <li>Support prioritaire</li>
+                </ul>
+                <button class="btn-primary" onclick="openDownloadModal()" style="width: 100%; margin-top: 20px;">
+                    S'abonner maintenant
+                </button>
+            </div>
+            <div class="pricing-card">
+                <h3>Entreprise</h3>
+                <div class="price">Sur devis</div>
+                <ul class="pricing-features">
+                    <li>Tout Premium</li>
+                    <li>API dédiée</li>
+                    <li>Support 24/7</li>
+                    <li>Intégrations custom</li>
+                </ul>
+                <button class="btn-primary" onclick="openDownloadModal()" style="width: 100%; margin-top: 20px;">
+                    Nous contacter
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS SECTION ===== -->
+    <section id="testimonials" class="testimonials">
+        <h2 class="section-title">Ce que Disent nos Utilisateurs</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"ClassQuiz m'a vraiment aidé à préparer mes examens. Les quiz générés sont pertinents et les explications sont claires !"</p>
+                <p class="testimonial-author">- Aminata, Étudiante</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"En tant qu'enseignant, j'utilise ClassQuiz pour créer rapidement des quiz pour mes élèves. C'est fantastique !"</p>
+                <p class="testimonial-author">- Mr. Diallo, Professeur</p>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="testimonial-text">"L'interface est intuitive et l'app fonctionne sans problème. Je recommande ClassQuiz à tous mes amis !"</p>
+                <p class="testimonial-author">- Fatima, Développeuse</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT SECTION ===== -->
+    <section id="contact" class="contact">
+        <div class="contact-content">
+            <h2>Nous Contacter</h2>
+            <p style="font-size: 1.1rem; margin: 20px 0;">Avez-vous des questions ? Nous sommes là pour vous aider !</p>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <p>
+                        <a href="mailto:nougbolognie@gmail.com">nougbolognie@gmail.com</a>
+                    </p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <p>
+                        <a href="tel:+2290157004309">+229 01 57 00 43 09</a>
+                    </p>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="openContactModal()" style="margin-top: 30px;">
+                <i class="fas fa-message"></i> Nous envoyer un message
+            </button>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>ClassQuiz</h4>
+                <p>Créez des quiz intelligents avec l'IA. Améliez votre apprentissage chaque jour.</p>
+                <div class="social-links">
+                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Produit</h4>
+                <ul>
+                    <li><a href="#features">Fonctionnalités</a></li>
+                    <li><a href="#pricing">Tarifs</a></li>
+                    <li><a href="#testimonials">Avis</a></li>
+                    <li><a onclick="openDownloadModal()" style="cursor: pointer;">Télécharger</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Légal</h4>
+                <ul>
+                    <li><a href="#">Politique de Confidentialité</a></li>
+                    <li><a href="#">Conditions d'Utilisation</a></li>
+                    <li><a href="#">Cookies</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 ClassQuiz. Tous droits réservés. | Créé avec ❤️ par notre équipe</p>
+        </div>
+    </footer>
+
+    <!-- ===== DOWNLOAD MODAL ===== -->
+    <div id="downloadModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeDownloadModal()">✕</button>
+            <h2>Télécharger ClassQuiz</h2>
+            <p style="color: #666; margin: 20px 0;">Choisissez votre plateforme :</p>
+            
+            <div style="display: grid; gap: 15px; margin: 30px 0;">
+                <button class="btn-primary" onclick="downloadAPK()" style="width: 100%; justify-content: center; gap: 10px; font-size: 1.1rem;">
+                    <i class="fas fa-download"></i> Télécharger l'Application (APK)
+                </button>
+                <a href="classquiz.html" class="btn-secondary" style="width: 100%; justify-content: center; gap: 10px; text-decoration: none; display: flex;">
+                    <i class="fas fa-globe"></i> Utiliser la Version Web
+                </a>
+                <div style="background: rgba(255, 193, 7, 0.2); border-left: 4px solid #ffc107; padding: 15px; border-radius: 8px; color: #856404;">
+                    <p style="margin: 0; font-size: 0.9rem;">
+                        <i class="fas fa-info-circle"></i> L'application est disponible en téléchargement direct. Installez-la sur votre appareil Android.
+                    </p>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px; color: white; margin-top: 30px;">
+                <h4 style="margin-bottom: 10px;"><i class="fas fa-exclamation-circle"></i> Important</h4>
+                <p style="font-size: 0.9rem; margin: 0;">ClassQuiz est disponible sur toutes les plateformes. Utilisez la version web si vous préférez un accès immédiat sans installation !</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CONTACT MODAL ===== -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeContactModal()">✕</button>
+            <h2>Nous Envoyer un Message</h2>
+            <form onsubmit="sendMessage(event)">
+                <div class="form-group">
+                    <label for="name">Nom complet</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Sujet</label>
+                    <input type="text" id="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 20px;">
+                    <i class="fas fa-send"></i> Envoyer
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hidden link for app access -->
+    <a id="classquiz-app" href="classquiz.html" style="display: none;"></a>
+
+    <script>
+        // Smooth scroll to sections
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Download modal functions
+        function openDownloadModal() {
+            document.getElementById('downloadModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDownloadModal() {
+            document.getElementById('downloadModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Contact modal functions
+        function openContactModal() {
+            document.getElementById('contactModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeContactModal() {
+            document.getElementById('contactModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Download APK
+        function downloadAPK() {
+            // Créer un élément <a> invisible
+            const link = document.createElement('a');
+            link.href = 'base.apk'; // Le fichier APK dans le même répertoire
+            link.download = 'ClassQuiz.apk'; // Nom du fichier téléchargé
+            
+            // Ajouter au DOM, cliquer et supprimer
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Notification
+            showDownloadNotification();
+        }
+
+        // Notification de téléchargement
+        function showDownloadNotification() {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+                color: white;
+                padding: 20px 25px;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(72, 187, 120, 0.3);
+                z-index: 3000;
+                animation: slideInRight 0.4s ease;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            `;
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>Téléchargement en cours... Merci d'avoir choisi ClassQuiz ! 🎯</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Retirer après 5 secondes
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.4s ease';
+                setTimeout(() => notification.remove(), 400);
+            }, 5000);
+        }
+
+        // Send contact message
+        function sendMessage(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Create mailto link
+            const mailtoLink = `mailto:nougbolognie@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Nom: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
+            
+            window.location.href = mailtoLink;
+            
+            closeContactModal();
+            alert('Votre message a été envoyé ! Nous vous répondrons bientôt.');
+            
+            // Reset form
+            document.querySelector('#contactModal form').reset();
+        }
+
+        // Close modals on outside click
+        window.addEventListener('click', function(event) {
+            const downloadModal = document.getElementById('downloadModal');
+            const contactModal = document.getElementById('contactModal');
+            
+            if (event.target === downloadModal) {
+                closeDownloadModal();
+            }
+            if (event.target === contactModal) {
+                closeContactModal();
+            }
+        });
+
+        // Close modals on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeDownloadModal();
+                closeContactModal();
+            }
+        });
+    </script>
+</body>
+</html>
